@@ -1,4 +1,7 @@
 ﻿using UnityEngine;
+using System.Linq;
+using System.Collections.Generic;
+using TMPro;
 
 public class Hero : MonoBehaviour
 {
@@ -8,9 +11,11 @@ public class Hero : MonoBehaviour
     private Inventory inventory;
     [SerializeField]
     private SelectionBorder border;
+    [SerializeField]
+    private TextMeshProUGUI goldValue;
 
     [SerializeField]
-    private Item[] items;
+    private List<Item> items;
     [SerializeField]
     private int selectedItemIndex;
 
@@ -18,6 +23,17 @@ public class Hero : MonoBehaviour
     private int gold;
 
     private Store currentStore;
+
+    public void SellItem()
+    {
+        gold += currentStore.GetValueForItem(items[selectedItemIndex]);
+        items.RemoveAt(selectedItemIndex);
+        selectedItemIndex = 0;
+        inventory.RemoveItem(selectedItemIndex);
+        border.SetPositionIndex(selectedItemIndex);
+
+        goldValue.text = gold.ToString();
+    }
 
     private void Start()
     {
@@ -29,16 +45,17 @@ public class Hero : MonoBehaviour
         }
     }
 
-    void Update()
+    private void Update()
     {
         transform.position += Vector3.right * Input.GetAxis("Horizontal") * speed * Time.deltaTime;
         transform.position += Vector3.up * Input.GetAxis("Vertical") * speed * Time.deltaTime;
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (currentStore != null)
+            if (currentStore != null && items.Count > selectedItemIndex)
             {
                 Debug.Log(currentStore.GetValueForItem(items[selectedItemIndex]));
+                SellItem();
             }
         }
 
