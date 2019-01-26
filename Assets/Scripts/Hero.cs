@@ -10,7 +10,7 @@ public class Hero : MonoBehaviour
     private SelectionBorder border;
 
     [SerializeField]
-    private LootItem[] items;
+    private Item[] items;
     [SerializeField]
     private int selectedItemIndex;
 
@@ -24,7 +24,7 @@ public class Hero : MonoBehaviour
         var i = 0;
         foreach (var item in items)
         {
-            inventory.slots[i].sprite = item.GetComponent<SpriteRenderer>().sprite;
+            inventory.slots[i].sprite = item.Sprite;
             i++;
         }
     }

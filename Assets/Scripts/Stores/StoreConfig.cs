@@ -13,12 +13,12 @@ public class StoreConfig : ScriptableObject
         public int value;
     }
 
-    [MenuItem("Assets/Create/Store Config")]
+    [MenuItem("Assets/Create/Game Elements/Store Config")]
     public static void CreateMyAsset()
     {
         var asset = ScriptableObject.CreateInstance<StoreConfig>();
 
-        AssetDatabase.CreateAsset(asset, "Assets/StoreConfig.asset");
+        ProjectWindowUtil.CreateAsset(asset, "Assets/StoreConfigs/StoreConfig.asset");
         AssetDatabase.SaveAssets();
 
         EditorUtility.FocusProjectWindow();

@@ -20,14 +20,14 @@ public class Store : MonoBehaviour
         }
     }
 
-    public int GetValueForItem(LootItem item)
+    public int GetValueForItem(Item item)
     {
         if (ItemValueMap.ContainsKey(item.Type))
         {
             return ItemValueMap[item.Type];
         }
 
-        throw new Exception("La Cagamos");
+        throw new Exception("La Re Cagamos");
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
