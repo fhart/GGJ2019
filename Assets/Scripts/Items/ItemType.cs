@@ -2,5 +2,20 @@
 {
     DragonFang,
     Sword,
-    Shield
+    Shield,
+    ElvenBoots,
+    Ring,
+    Scroll,
+    Gauntlets,
+    Bow,
+    Claymore,
+    WizardHat,
+    Bandana,
+    Chalice,
+    Helm,
+    Staff,
+    Elixir,
+    MasterKey,
+    PlateArmor,
+    Wand
 }
