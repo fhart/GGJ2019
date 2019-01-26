@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e2e84f8348061e499216c5f6a804fe8, type: 3}
+  m_Script: {fileID: 11500000, guid: 4cf0d70ff86c38c4abe56055aea89b50, type: 3}
   m_Name: DragonFang
   m_EditorClassIdentifier: 
   type: 0
-  sprite: {fileID: 21300000, guid: b1767271349ae0c44badc22efd7e93e9, type: 3}
+  sprite: {fileID: 21300000, guid: 5e4c7d16a880e984c97fbabbaeca7dc9, type: 3}
