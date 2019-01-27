@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 9
   sprite: {fileID: 21300000, guid: a5cfb90dca4dc054f98544aa0244c46c, type: 3}
+  score: 75
