@@ -15,14 +15,24 @@ public class CarpenterManager : MonoBehaviour
     [SerializeField]
     private Text dialogText;
     [SerializeField]
-    private string dialogServiceInfoFormat;
-    [SerializeField]
     private string welcomeDialog;
     [SerializeField]
     private string InvalidFixDialog;
     [SerializeField]
     private string successFixDialog;
+    [SerializeField]
+    private string allFixesDoneDialog;
 
+    [SerializeField]
+    private AudioClip openDoor;
+    [SerializeField]
+    private AudioClip closeDoor;
+    [SerializeField]
+    private AudioClip work;
+    [SerializeField]
+    private AudioClip invalidRequest;
+
+    private AudioSource audioSource;
     private int currentHomeTier;
 
     public event Action OnShow = delegate { };
@@ -46,6 +56,9 @@ public class CarpenterManager : MonoBehaviour
         hero.EnableMovement();
         carpenterCanvas.gameObject.SetActive(false);
 
+        audioSource.clip = closeDoor;
+        audioSource.Play();
+
         OnHide?.Invoke();
     }
     
@@ -54,14 +67,40 @@ public class CarpenterManager : MonoBehaviour
         if (currentHomeTier < currentCarpenter.houseTiers.Count && hero.gold > currentCarpenter.houseTiers[currentHomeTier].value)
         {
             currentCarpenter.FixHouse(currentHomeTier);
-            dialogText.text = successFixDialog;
             hero.Pay(currentCarpenter.houseTiers[currentHomeTier].value);
             currentHomeTier++;
+
+            audioSource.clip = work;
+            audioSource.Play();
+
+            if (currentHomeTier < currentCarpenter.houseTiers.Count)
+            {
+                dialogText.text = string.Format(successFixDialog, currentCarpenter.houseTiers[currentHomeTier].value);
+            }
+            else
+            {
+                dialogText.text = allFixesDoneDialog;
+            }
         }
         else
         {
-            dialogText.text = InvalidFixDialog;
+            audioSource.clip = invalidRequest;
+            audioSource.Play();
+
+            if (currentHomeTier < currentCarpenter.houseTiers.Count)
+            {
+                dialogText.text = InvalidFixDialog;
+            }
+            else
+            {
+                dialogText.text = allFixesDoneDialog;
+            }
         }
+    }
+
+    private void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -81,7 +120,9 @@ public class CarpenterManager : MonoBehaviour
     private void InitializeStore()
     {
         carpenterCanvas.gameObject.SetActive(true);
-        dialogText.text = welcomeDialog;
+        dialogText.text = string.Format(welcomeDialog, currentCarpenter.houseTiers[currentHomeTier].value);
+        audioSource.clip = openDoor;
+        audioSource.Play();
 
         OnShow?.Invoke();
     }

@@ -11,6 +11,6 @@ public class CameraMovement : MonoBehaviour
 
     private void Update()
     {
-        transform.position = new Vector3(transform.position.x, hero.transform.position.y + yOffset, transform.position.z);
+        transform.position = new Vector3(transform.position.x, Mathf.Max(hero.transform.position.y + yOffset, 6), transform.position.z);
     }
 }

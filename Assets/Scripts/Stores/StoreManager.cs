@@ -28,6 +28,16 @@ public class StoreManager : MonoBehaviour
     [SerializeField]
     private string successfulSellDialog;
 
+    [SerializeField]
+    private AudioClip openDoor;
+    [SerializeField]
+    private AudioClip closeDoor;
+    [SerializeField]
+    private AudioClip sell;
+    [SerializeField]
+    private AudioClip invalidSell;
+
+    private AudioSource audioSource;
     private int selectedItemIndex;
 
     public event Action OnShow = delegate { };
@@ -50,6 +60,9 @@ public class StoreManager : MonoBehaviour
     {
         hero.EnableMovement();
         storeCanvas.gameObject.SetActive(false);
+        selectionBorder.gameObject.SetActive(false);
+        audioSource.clip = closeDoor;
+        audioSource.Play();
 
         OnHide?.Invoke();
     }
@@ -72,11 +85,20 @@ public class StoreManager : MonoBehaviour
             selectedItemIndex = -1;
             selectionBorder.gameObject.SetActive(false);
             dialogText.text = successfulSellDialog;
+            audioSource.clip = sell;
+            audioSource.Play();
         }
         else
         {
             dialogText.text = InvalidSellDialog;
+            audioSource.clip = invalidSell;
+            audioSource.Play();
         }
+    }
+
+    private void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -100,6 +122,8 @@ public class StoreManager : MonoBehaviour
         selectedItemIndex = -1;
 
         SetHeroItems();
+        audioSource.clip = openDoor;
+        audioSource.Play();
 
         OnShow?.Invoke();
     }

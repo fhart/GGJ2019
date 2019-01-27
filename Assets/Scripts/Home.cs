@@ -1,6 +1,7 @@
 ﻿using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Home : MapObject
@@ -21,9 +22,21 @@ public class Home : MapObject
     private GameObject insideHome;
     [SerializeField]
     private Image[] heroItemsSlots;
+    [SerializeField]
+    private RawImage insideBackground;
+    [SerializeField]
+    private Texture insideTexture;
+
+    [SerializeField]
+    private AudioClip openDoor;
+    [SerializeField]
+    private AudioClip closeDoor;
+    [SerializeField]
+    private AudioClip endGame;
 
     private SpriteRenderer spriteRenderer;
     private TextMeshPro completion;
+    private AudioSource audioSource;
 
     private bool inArea;
 
@@ -48,6 +61,8 @@ public class Home : MapObject
     {
         hero.EnableMovement();
         homeCanvas.gameObject.SetActive(false);
+        audioSource.clip = closeDoor;
+        audioSource.Play();
 
         OnHide?.Invoke();
     }
@@ -57,13 +72,26 @@ public class Home : MapObject
         surePopUp.gameObject.SetActive(false);
         insideHome.gameObject.SetActive(true);
         SetupHome();
+        audioSource.clip = endGame;
+        audioSource.Play();
     }
 
-    public void UpdateHouse(int newCompletion, Sprite sprite)
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
+    public void UpdateHouse(int newCompletion, Sprite sprite, Texture inside)
     {
         spriteRenderer.sprite = sprite;
         completion.text = string.Format("{0}% completed", newCompletion);
         completionValue = newCompletion;
+        insideTexture = inside;
     }
 
     private void SetupHome()
@@ -86,12 +114,14 @@ public class Home : MapObject
             {
                 heroItemsSlots[i].sprite = item.Sprite;
                 score += item.Score;
+                Debug.Log(score);
             }
 
             i++;
         }
 
         scoreText.text = string.Format("Your score is {0}", score);
+        insideBackground.texture = insideTexture;
 
         OnShow?.Invoke();
     }
@@ -100,6 +130,7 @@ public class Home : MapObject
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         completion = GetComponentInChildren<TextMeshPro>();
+        audioSource = GetComponent<AudioSource>();
         completionValue = 0;
     }
 
@@ -115,6 +146,9 @@ public class Home : MapObject
                 homeCanvas.gameObject.SetActive(true);
                 surePopUp.gameObject.SetActive(true);
                 insideHome.gameObject.SetActive(false);
+
+                audioSource.clip = openDoor;
+                audioSource.Play();
             }
         }
     }

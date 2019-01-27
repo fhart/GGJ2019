@@ -13,6 +13,7 @@ public class StoreConfig : ScriptableObject
         public int value;
     }
 
+#if UNITY_EDITOR
     [MenuItem("Assets/Create/Game Elements/Store Config")]
     public static void CreateMyAsset()
     {
@@ -25,4 +26,5 @@ public class StoreConfig : ScriptableObject
 
         Selection.activeObject = asset;
     }
+#endif
 }

@@ -12,7 +12,7 @@ public class Carpenter : MapObject
 
     public void FixHouse(int fixIndex)
     {
-        home.UpdateHouse(houseTiers[fixIndex].completion, houseTiers[fixIndex].home);
+        home.UpdateHouse(houseTiers[fixIndex].completion, houseTiers[fixIndex].home, houseTiers[fixIndex].inside);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -31,5 +31,6 @@ public class Carpenter : MapObject
         public int value;
         public int completion;
         public Sprite home;
+        public Texture inside;
     }
 }

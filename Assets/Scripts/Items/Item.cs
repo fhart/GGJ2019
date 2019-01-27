@@ -16,6 +16,7 @@ public class Item : ScriptableObject
 
     public int Score { get { return score; } }
 
+#if UNITY_EDITOR
     [MenuItem("Assets/Create/Game Elements/Item")]
     public static void CreateMyAsset()
     {
@@ -28,4 +29,5 @@ public class Item : ScriptableObject
 
         Selection.activeObject = asset;
     }
+#endif
 }
