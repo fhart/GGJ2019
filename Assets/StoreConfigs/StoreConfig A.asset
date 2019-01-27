@@ -49,3 +49,7 @@ MonoBehaviour:
     value: 100
   - type: 17
     value: 200
+  - type: 18
+    value: 25
+  - type: 19
+    value: 25

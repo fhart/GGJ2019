@@ -17,5 +17,7 @@
     Elixir,
     MasterKey,
     PlateArmor,
-    Wand
+    Wand,
+    OldCheese,
+    PoisonedApple,
 }
