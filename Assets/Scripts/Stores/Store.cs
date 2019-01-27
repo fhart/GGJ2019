@@ -1,12 +1,13 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Store : MonoBehaviour
+public class Store : MapObject
 {
     [SerializeField]
     private StoreConfig config;
+    [SerializeField]
+    private StoreManager doorPopUp;
 
     private Dictionary<ItemType, int> ItemValueMap;
 
@@ -20,11 +21,11 @@ public class Store : MonoBehaviour
         }
     }
 
-    public int GetValueForItem(Item item)
+    public int GetValueForItem(ItemType type)
     {
-        if (ItemValueMap.ContainsKey(item.Type))
+        if (ItemValueMap.ContainsKey(type))
         {
-            return ItemValueMap[item.Type];
+            return ItemValueMap[type];
         }
 
         throw new Exception("La Re Cagamos");
@@ -32,6 +33,11 @@ public class Store : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Me toco " + collision.gameObject.name);
+        doorPopUp.Activate(this);
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        doorPopUp.Hide();
     }
 }

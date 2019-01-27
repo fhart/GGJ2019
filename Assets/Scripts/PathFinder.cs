@@ -1,5 +1,4 @@
 using UnityEngine;
-using System;
 using System.Collections.Generic;
 
 enum Direction
@@ -8,14 +7,15 @@ enum Direction
     Right,
     Up,
     Down,
+    Invalid
 }
 
-class Grid
+public class Grid
 {
     // true if can walk on the tile (x,y)
-    public bool[,] tiles; // [y, x]
+    public MapObject[,] tiles; // [y, x]
 
-    public bool canWalkOn(int x, int y)
+    public bool CanWalkOn(int x, int y)
     {
         if (y < 0 || y >= tiles.GetLength(0) ||
             x < 0 || x >= tiles.GetLength(1))
@@ -24,103 +24,102 @@ class Grid
         }
         else
         {
-            return tiles[y, x];
+            return tiles[y, x] == null;
         }
+    }
+
+    public Vector2 GetPositionToGo(Vector2 pos)
+    {
+        var x = (int)pos.x;
+        var y = (int)pos.y;
+        return tiles[y, x] != null ? tiles[y, x].GetPositionToGo(pos) : pos;
     }
 }
 
 class Step
 {
-  public Direction direction;
-  public int stepCount;
-  public Step prev;
+    public Direction direction;
+    public int stepCount;
+    public Step prev;
 }
 
 class PathFinder
 {
     // Llamar esto para obeter en path (direcciones) desde (startX, startY) a (endX, endY)
-    public static List<Direction> getFasterRoute(Grid grid, int startX, int startY, int endX, int endY)
+    public static List<Direction> GetFasterRoute(Grid grid, int startX, int startY, int endX, int endY)
     {
         // error si empieza o termina fuera del mapa o en un lugar inaccesible
-        if (!grid.canWalkOn(startX, startY) || !grid.canWalkOn(endX, endY)) {
+        if (!grid.CanWalkOn(endX, endY))
+        {
             return null;
         }
 
         Step[,] steps = new Step[grid.tiles.GetLength(0), grid.tiles.GetLength(1)];
-        
-        steps[startY, startX] = new Step() {
+
+        steps[startY, startX] = new Step()
+        {
             direction = Direction.Left, // bucause it can't be null
             stepCount = 0,
             prev = null,
         };
 
         // start calculation
-        continueCheckingSteps(grid, startX, startY, steps);
+        ContinueCheckingSteps(grid, startX, startY, steps);
 
         // check results
         Step end = steps[endY, endX];
-        if (end == null) {
+        if (end == null)
+        {
             return null;
-        } else {
+        }
+        else
+        {
             List<Direction> result = new List<Direction>();
             // recorrer hasta llegar al inicio
-            while (end.prev != null) {
+            while (end.prev != null)
+            {
                 result.Add(end.direction);
                 end = end.prev;
             }
             result.Reverse();
+
+            result.Add(Direction.Invalid);
             return result;
         }
     }
 
-    private static void continueCheckingSteps(Grid grid, int x, int y, Step[,] steps) {
+    private static void ContinueCheckingSteps(Grid grid, int x, int y, Step[,] steps)
+    {
         Step prev = steps[y, x];
 
         // izquierda
-        continueCheckingStepsOnDirection(grid, x - 1, y, steps, prev, Direction.Left);
-        
+        ContinueCheckingStepsOnDirection(grid, x - 1, y, steps, prev, Direction.Left);
+
         // derecha
-        continueCheckingStepsOnDirection(grid, x + 1, y, steps, prev, Direction.Right);
-        
-        // arriba
-        continueCheckingStepsOnDirection(grid, x, y - 1, steps, prev, Direction.Up);
-        
+        ContinueCheckingStepsOnDirection(grid, x + 1, y, steps, prev, Direction.Right);
+
         // abajo
-        continueCheckingStepsOnDirection(grid, x, y + 1, steps, prev, Direction.Down);
+        ContinueCheckingStepsOnDirection(grid, x, y - 1, steps, prev, Direction.Down);
+
+        // arriba
+        ContinueCheckingStepsOnDirection(grid, x, y + 1, steps, prev, Direction.Up);
     }
 
-    private static void continueCheckingStepsOnDirection(Grid grid, int x, int y, Step[,] steps, Step prev, Direction direction) {
-        if (grid.canWalkOn(x, y)) {
+    private static void ContinueCheckingStepsOnDirection(Grid grid, int x, int y, Step[,] steps, Step prev, Direction direction)
+    {
+        if (grid.CanWalkOn(x, y))
+        {
             Step alreadyWalked = steps[y, x];
-            if (alreadyWalked == null || alreadyWalked.stepCount > prev.stepCount + 1) {
-                steps[y, x] = new Step() {
+            if (alreadyWalked == null || alreadyWalked.stepCount > prev.stepCount + 1)
+            {
+                steps[y, x] = new Step()
+                {
                     direction = direction,
                     stepCount = prev.stepCount + 1,
                     prev = prev,
                 };
 
-                continueCheckingSteps(grid, x, y, steps);
-            }
-        }
-    }
-
-    public static void test() {
-        Grid grid = new Grid {
-            tiles = new bool[5, 4] {
-                { true, true, true, true },
-                { false, true, true, false },
-                { false, true, true, true },
-                { true, false, true, false },
-                { true, true, true, true },
-            }
-        };
-
-        List<Direction> result = PathFinder.getFasterRoute(grid, 0, 0, 0, 4);
-        Debug.Log(result != null);
-        if (result != null) {
-            Debug.Log(result.Count);
-            foreach (var r in result) {
-                Debug.Log(r.ToString());
+                ContinueCheckingSteps(grid, x, y, steps);
             }
         }
     }
